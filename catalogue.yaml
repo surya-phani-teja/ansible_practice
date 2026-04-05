@@ -41,7 +41,7 @@
   - name: install depenedencies
     community.general.npm:
       path: /app
-    
+
   - name: copy catalogue services
     ansible.builtin.copy:
       src: catalogue.service
