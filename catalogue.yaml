@@ -37,5 +37,31 @@
       src: /tmp/catalogue.zip
       dest: /app
       remote_src: yes
+  
+  - name: install depenedencies
+    community.general.npm:
+      path: /app
+    
+  - name: copy catalogue services
+    ansible.builtin.copy:
+      src: catalogue.service
+      dest: /etc/systemd/system/catalogue.service
+  
+  - name: copy mongorepp
+    ansible.builtin.copy:
+      src: mongo.repo
+      dest: /etc/yum.repos.d/mongo.repo
 
+  - name: install mongodb clinet
+    ansible.builtin.package:
+      name: mongodb-mongosh
+      state: present
+
+  - name: connect to mongo db catalogue
+    ansible.builtin.command: mongosh mongodb.daws86s.fun --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')"
+    register: catalogue_output
+
+  - name: print the catalogue output
+    anible.builtin.debug:
+      msg: "{{ catalogue_output }}"
   
