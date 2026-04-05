@@ -63,10 +63,9 @@
   
   - name: evalute the catalogue database
     community.mongodb.mongodb_shell:
+      login_host: mongodb.thiscomeback.fun
       eval: db.getMongo().getDBNames().indexOf('catalogue')
     register: catalogue_output
-
-
 
   - name: print the catalogue output
     ansible.builtin.debug:
