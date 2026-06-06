@@ -22,12 +22,23 @@
         image_id: "{{ ami_id }}"
         tags:
           Name: "{{ item }}"
-      loop: "{{ instance }}"
+      loop: "{{ instances }}"
       register: ec2_output
 
-    - name: print ec2 output
-      ansible.builtin.debug:
-        msg: "{{ ec2_output }}"
+    # - name: print ec2 output
+    #   ansible.builtin.debug:
+    #     msg: "{{ ec2_output }}"
+
+    - name: create route53 record
+      amazon.aws.route53:
+        state: present
+        zone: "{{ domain_name }}"
+        record: "{{ item.item }}.{{ domain_name }}" # mongodb.daws86s.fun
+        type: A
+        ttl: 2
+        value: "{{ item.instances[0].private_ip_address }}"
+        overwrite: true
+      loop: "{{ ec2_output.results }}"
     
     # - name: print the public ip of the instance
     #   ansible.builtin.debug:
@@ -39,13 +50,3 @@
     #     msg: "{{ item.instances[0].private_ip_address }}"
     #   loop: "{{ ec2_output.results }}"
 
-    # - name: create r53 record
-    #   amazon.aws.route53:
-    #     state: present
-    #     zone: "{{ domain_name }}"
-    #     record: "{{item.item}}.{{ domain_name }}"
-    #     type: A
-    #     ttl: 1
-    #     value: "{{ item.instances[0].public_ip_address }}"
-    #     overwrite: true
-    #   loop: "{{ ec2_output.results }}"
