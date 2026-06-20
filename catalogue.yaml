@@ -82,7 +82,7 @@
       state: started
 
   - name: deamon reload enable and start
-    ansible.builtlin.systemd.service:
+    ansible.builtin.systemd.service:
       name: catalogue
       enabled: true
       state: started
