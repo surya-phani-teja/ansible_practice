@@ -40,6 +40,22 @@
         overwrite: true
       loop: "{{ ec2_output.results }}"
     
+    #creating record for public ip only for front end
+
+    - name: create route53 record for front
+      amazon.aws.route53:
+        state: present
+        zone: "{{ domain_name }}"
+        record: "{{ domain_name }}" # mongodb.daws86s.fun
+        type: A
+        ttl: 2
+        value: "{{ item.instances[0].public_ip_address }}"
+        overwrite: true
+      when: item.item == "frontend"
+      loop: "{{ ec2_output.results }}"
+
+
+
     # - name: print the public ip of the instance
     #   ansible.builtin.debug:
     #     msg: "{{ item.instances[0].public_ip_address }}"
