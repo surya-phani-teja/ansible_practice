@@ -29,7 +29,7 @@
     #   ansible.builtin.debug:
     #     msg: "{{ ec2_output }}"
 
-    - name: create route53 record
+    - name: create route53 recordd
       amazon.aws.route53:
         state: present
         zone: "{{ domain_name }}"
